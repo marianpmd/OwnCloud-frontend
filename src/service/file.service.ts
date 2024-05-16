@@ -5,18 +5,18 @@ import {Observable, tap} from "rxjs";
 import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
 import {SystemInfo} from "../datamodel/SystemInfo";
 
-const UPLOAD_URL = environment.baseUrl + '/file/upload';
-const LOAD_ALL_URL = environment.baseUrl + '/file/all';
-export const DOWNLOAD_ONE_URL = environment.baseUrl + '/file/one';
-export const VIDEO_STREAM_URL = environment.baseUrl + '/file/one/video';
-const DELETE_ONE_URL = environment.baseUrl + '/file/delete/one';
-const CHECK_FILE_URL = environment.baseUrl + '/file/check';
-const LOAD_BY_KEYWORD = environment.baseUrl + '/file/byKeyword';
-const GET_SYS_INFO = environment.baseUrl + '/user/systemInfo';
-const MAKE_PUBLIC = environment.baseUrl + '/file/makePublic';
-const MAKE_PRIVATE = environment.baseUrl + '/file/makePrivate';
-const GET_THUMBNAIL = environment.baseUrl + '/file/thumbnail';
-export const DOWNLOAD_ONE_PUBLIC = environment.baseUrl + '/file/public';
+const UPLOAD_URL = environment.baseUrlStorage + '/file/upload';
+const LOAD_ALL_URL = environment.baseUrlStorage + '/file/all';
+export const DOWNLOAD_ONE_URL = environment.baseUrlStorage + '/file/one';
+export const VIDEO_STREAM_URL = environment.baseUrlStorage + '/file/one/video';
+const DELETE_ONE_URL = environment.baseUrlStorage + '/file/delete/one';
+const CHECK_FILE_URL = environment.baseUrlStorage + '/file/check';
+const LOAD_BY_KEYWORD = environment.baseUrlStorage + '/file/byKeyword';
+const GET_SYS_INFO = environment.baseUrlStorage + '/system/info';
+const MAKE_PUBLIC = environment.baseUrlStorage + '/file/makePublic';
+const MAKE_PRIVATE = environment.baseUrlStorage + '/file/makePrivate';
+const GET_THUMBNAIL = environment.baseUrlStorage + '/file/thumbnail';
+export const DOWNLOAD_ONE_PUBLIC = environment.baseUrlStorage + '/file/public';
 
 @Injectable({
   providedIn: 'root'

@@ -17,7 +17,7 @@ export class AdminGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    let token = this.cookieService.get("app-jwt")
+    let token = window.localStorage.getItem("app-jwt")
 
     if (!token) {
       this.router.navigate(['login']);

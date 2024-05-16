@@ -4,9 +4,9 @@ import {environment} from "../environments/environment";
 import {BehaviorSubject} from "rxjs";
 import {NotificationInfo} from "../datamodel/NotificationInfo";
 
-const NOTIFY_ADMIN = environment.baseUrl + '/notification/admin';
-const ALL_NOTIFICATIONS = environment.baseUrl + '/notification/all';
-const UPDATE_NOTIFICATIONS = environment.baseUrl + '/notification/all/update';
+const NOTIFY_ADMIN = environment.baseUrlNotification + '/notification/admin';
+const ALL_NOTIFICATIONS = environment.baseUrlNotification + '/notification/all';
+const UPDATE_NOTIFICATIONS = environment.baseUrlNotification + '/notification/all/update';
 
 @Injectable({
   providedIn: 'root'

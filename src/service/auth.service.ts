@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../environments/environment";
 import {LoginData} from "../datamodel/LoginData";
 import {Observable} from "rxjs";
 import {UserInfo} from "../datamodel/UserInfo";
 
-export const LOGIN_URL = environment.baseUrl + '/login';
-const REGISTER_URL = environment.baseUrl + '/user/register';
-const INFO_URL = environment.baseUrl + '/user/info';
-const ALL_USERS_URL = environment.baseUrl + '/user/all';
-const DELETE_USER = environment.baseUrl + '/user/delete';
-const ASSIGN_USER = environment.baseUrl + '/user/assign';
+export const LOGIN_URL = environment.baseUrlUser + '/login';
+const REGISTER_URL = environment.baseUrlUser + '/user/register';
+const INFO_URL = environment.baseUrlUser + '/user/info';
+const ALL_USERS_URL = environment.baseUrlUser + '/user/all';
+const DELETE_USER = environment.baseUrlUser + '/user/delete';
+const ASSIGN_USER = environment.baseUrlUser + '/user/assign';
 
 @Injectable({
   providedIn: 'root'

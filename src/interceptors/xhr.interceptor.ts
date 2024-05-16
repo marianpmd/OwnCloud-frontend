@@ -1,5 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpHeaders,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
 import {Router} from "@angular/router";
 
@@ -10,8 +17,13 @@ export class XhrInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    let jwt = window.localStorage.getItem("app-jwt");
+
     const xhr = request.clone({
-        withCredentials: true
+        withCredentials: true,
+        setHeaders: {
+          Authorization: `Bearer ${jwt}`
+        }
       }
     );
     return next.handle(xhr);

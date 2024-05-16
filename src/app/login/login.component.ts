@@ -5,6 +5,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {RegisterComponent} from "../register/register.component";
+import {error} from "@angular/compiler/src/util";
+import {throwError} from "rxjs";
 
 
 @Component({
@@ -41,7 +43,20 @@ export class LoginComponent implements OnInit {
         .subscribe({
           next: result => {
             this.isLoading = false;
-            this.router.navigate(['/dashboard']);
+
+            console.log("RESULT : ")
+            console.log(result)
+            let header = result.headers.get("Authorization");
+            console.log("HEADER : ")
+            let jwt = header?.split(" ")[1];
+            console.log("JWT : ")
+            if (!jwt){
+              throw "Cannot find token";
+            }else{
+              window.localStorage.setItem("app-jwt", jwt);
+              console.log("NAVIGATING")
+              this.router.navigate(['/dashboard']);
+            }
           },
           error: err => {
             console.log("Error , showing snackbar")

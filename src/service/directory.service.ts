@@ -4,9 +4,9 @@ import {HttpClient} from "@angular/common/http";
 import {DirectoryInfo} from "../datamodel/DirectoryInfo";
 import {DirectoryWithParentInfo} from "../datamodel/DirectoryWithParentInfo";
 
-const CREATE_DIRECTORY = environment.baseUrl + '/dir/create';
-const DELETE_DIRECTORY = environment.baseUrl + '/dir/delete';
-const ALL_DIRECTORIES = environment.baseUrl + '/dir/getAll/inPath';
+const CREATE_DIRECTORY = environment.baseUrlStorage + '/dir/create';
+const DELETE_DIRECTORY = environment.baseUrlStorage + '/dir/delete';
+const ALL_DIRECTORIES = environment.baseUrlStorage + '/dir/getAll/inPath';
 
 @Injectable({
   providedIn: 'root'

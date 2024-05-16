@@ -5,6 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {MatDialogRef} from "@angular/material/dialog";
 import {CookieService} from "ngx-cookie-service";
+import {delay} from "rxjs";
 
 export function matchValidator(
   matchTo: string,
@@ -76,9 +77,14 @@ export class RegisterComponent implements OnInit {
     console.log("in login",response)
 
     this.auth.onLogin(response.email, btoa(response.password))
+      .pipe(
+        delay(8)
+      )
       .subscribe({
         next: result => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard'],{
+
+          });
         }
       });
   }

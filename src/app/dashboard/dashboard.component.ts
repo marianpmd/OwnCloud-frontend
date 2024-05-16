@@ -16,7 +16,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
 import {FileItemDialogComponent} from "../dialogs/file-item-dialog/file-item-dialog.component";
 import {HttpStatusCode} from "@angular/common/http";
-import {debounceTime, finalize, Observable, Subscription, switchMap, tap} from "rxjs";
+import {debounceTime, finalize, Observable, retry, Subscription, switchMap, tap} from "rxjs";
 import {FileUpdateDialogComponent} from "../dialogs/file-update-dialog/file-update-dialog.component";
 import {FiltersDialogComponent} from "../dialogs/filters-dialog/filters-dialog.component";
 import {FormControl} from "@angular/forms";
@@ -109,6 +109,14 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("INIT WAS CALLED");
+    let jwt = window.localStorage.getItem("app-jwt");
+
+    let decodedToken = jwt_decode(jwt as string);
+
+    // @ts-ignore
+    this.userEmail = decodedToken.sub;
+
     this.initNotifySocket();
 
     this.initFileNotifySocket();
@@ -127,11 +135,7 @@ export class DashboardComponent implements OnInit {
         })
       ).subscribe();
 
-    let jwt = this.cookieService.get("app-jwt");
 
-    let decodedToken = jwt_decode(jwt as string);
-    // @ts-ignore
-    this.userEmail = decodedToken.sub;
     this.initUserInfo(this.userEmail);
 
 
@@ -290,7 +294,7 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    if (shouldUpload === false) {
+    if (!shouldUpload) {
       this.fileUploadSubscription = this.uploadStateService.getFileInfo().subscribe(
         result => {
           if (result) {
@@ -328,7 +332,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onLogoutClick() {
-    this.cookieService.delete("app-jwt");
+    window.localStorage.removeItem("app-jwt");
     this.router.navigateByUrl("/login");
   }
   //
@@ -422,6 +426,9 @@ export class DashboardComponent implements OnInit {
 
   private loadAllInitialFilesPaginated(sortBy: string, page: number, size: number, asc: boolean, currentPaths: string[]) {
     this.fileService.loadAllFiles(sortBy, page, size, asc, currentPaths)
+      .pipe(
+        retry(10)
+      )
       .subscribe(fileData => {
         fileData.content.forEach(fdata => {
           if (fdata.fileType === FileType.IMAGE ||
@@ -546,7 +553,7 @@ export class DashboardComponent implements OnInit {
   private initNotifySocket() {
     console.log("Initialize WebSocket Connection for notifications");
 
-    let ws = new SockJS(`${environment.baseUrl}/ws`);
+    let ws = new SockJS(`${environment.baseUrlNotificationWs}/ws`);
     let stompClient = Stomp.over(ws);
     let _this = this;
     stompClient.connect({}, function (frame) {
@@ -566,7 +573,7 @@ export class DashboardComponent implements OnInit {
   private initFileNotifySocket() {
     console.log("Initialize WebSocket Connection for file updates");
 
-    let ws = new SockJS(`${environment.baseUrl}/ws`);
+    let ws = new SockJS(`${environment.baseUrlStorage}/ws`);
     let stompClient = Stomp.over(ws);
     let _this = this;
     stompClient.connect({}, function (frame) {
@@ -586,7 +593,7 @@ export class DashboardComponent implements OnInit {
 
         _this.snackBar.open("A new file was added!", "x", snackSuccessConfig());
       });
-    }, (err) => console.log(err));
+    }, (err) => console.log(`Could not connect to ws :  ${err}`));
   }
 
   private initUserInfo(userEmail: string) {
@@ -601,7 +608,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onAdminClick() {
-    this.router.navigate(['dashboard/admin']);
+    this.router.navigate(['/dashboard/admin']);
   }
 
   isAdminPath() {
@@ -623,7 +630,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onMonitorClick() {
-    window.open(environment.baseUrl+'/monitoring')
+    window.open(environment.baseUrlStorage+'/monitoring')
   }
 
   private initFileChangeService() {

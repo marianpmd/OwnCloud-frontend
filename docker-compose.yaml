@@ -1,0 +1,14 @@
+version: '3'
+services:
+  filestorm:
+    image: filestorm-ui:latest
+    container_name: filestorm
+    ports:
+      - "8000:80"
+    restart: always
+    networks:
+      - filestormnetwork
+
+networks:
+  filestormnetwork:
+    driver: bridge
