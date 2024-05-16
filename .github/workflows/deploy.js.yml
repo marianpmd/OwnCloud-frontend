@@ -1,43 +1,35 @@
-
-name: Node.js CI
+name: AWS S3 deploy
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - main
 
 jobs:
-  build:
-    # using Ubuntu
-    runs-on: self-hosted
-    defaults:
-      run:
-        working-directory: ./
+  deploy:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1 #this installs node and npm for us
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          node-version: '18.x'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
 
-      - uses: actions/cache@v1 # this allows for re-using node_modules caching, making builds a bit faster.
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: 18.x
 
-      - name: NPM Install
-        run: npm install --force
-      - name: NPM Install Angular
-        run: npm install -g @angular/cli > /dev/null
-      - name: NPM build Angular Production
-        run: ng build
-      - name: Delete Existing Files
-        run : sudo rm -rf /var/www/mariancr.go.ro/html/*
-      - name: Move files to web server folder
-        run : |
-          sudo chmod 777 /var/www/mariancr.go.ro/html
-          mv /home/marian/actions-runner-frontend/_work/FileStorm-frontend/FileStorm-frontend/dist/file-storm-frontend/* /var/www/mariancr.go.ro/html/
-      - name: Restart service
-        run : sudo systemctl restart nginx
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        if: success()
+        run: aws s3 sync ./dist/file-storm-frontend s3://filestorm-cloud.com
