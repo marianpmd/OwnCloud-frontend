@@ -3,7 +3,7 @@ name: AWS S3 deploy
 on:
   push:
     branches:
-      - main
+      - cloud
 
 jobs:
   deploy:
