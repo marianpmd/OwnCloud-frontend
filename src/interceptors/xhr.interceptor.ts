@@ -27,7 +27,7 @@ export class XhrInterceptor implements HttpInterceptor {
       }
     );
     return next.handle(xhr);
-    // .pipe(catchError(err => this.handleError(err)));
+
   }
 
   private handleError(err: HttpErrorResponse): Observable<any> {
